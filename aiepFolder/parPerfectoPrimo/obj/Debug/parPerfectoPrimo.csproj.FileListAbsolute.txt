@@ -1,0 +1,10 @@
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\aiepFolder\parPerfectoPrimo\obj\Debug\parPerfectoPrimo.csproj.AssemblyReference.cache
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\aiepFolder\parPerfectoPrimo\obj\Debug\parPerfectoPrimo.Form1.resources
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\aiepFolder\parPerfectoPrimo\obj\Debug\parPerfectoPrimo.Properties.Resources.resources
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\aiepFolder\parPerfectoPrimo\obj\Debug\parPerfectoPrimo.csproj.GenerateResource.cache
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\aiepFolder\parPerfectoPrimo\obj\Debug\parPerfectoPrimo.csproj.CoreCompileInputs.cache
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\aiepFolder\parPerfectoPrimo\bin\Debug\parPerfectoPrimo.exe.config
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\aiepFolder\parPerfectoPrimo\bin\Debug\parPerfectoPrimo.exe
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\aiepFolder\parPerfectoPrimo\bin\Debug\parPerfectoPrimo.pdb
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\aiepFolder\parPerfectoPrimo\obj\Debug\parPerfectoPrimo.exe
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\aiepFolder\parPerfectoPrimo\obj\Debug\parPerfectoPrimo.pdb
