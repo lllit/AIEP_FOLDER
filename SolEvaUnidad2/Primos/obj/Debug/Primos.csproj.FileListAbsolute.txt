@@ -1,0 +1,10 @@
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\AIEP_FOLDER\SolEvaUnidad2\Primos\bin\Debug\Primos.exe.config
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\AIEP_FOLDER\SolEvaUnidad2\Primos\bin\Debug\Primos.exe
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\AIEP_FOLDER\SolEvaUnidad2\Primos\bin\Debug\Primos.pdb
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\AIEP_FOLDER\SolEvaUnidad2\Primos\obj\Debug\Primos.csproj.AssemblyReference.cache
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\AIEP_FOLDER\SolEvaUnidad2\Primos\obj\Debug\Primos.Form1.resources
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\AIEP_FOLDER\SolEvaUnidad2\Primos\obj\Debug\Primos.Properties.Resources.resources
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\AIEP_FOLDER\SolEvaUnidad2\Primos\obj\Debug\Primos.csproj.GenerateResource.cache
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\AIEP_FOLDER\SolEvaUnidad2\Primos\obj\Debug\Primos.csproj.CoreCompileInputs.cache
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\AIEP_FOLDER\SolEvaUnidad2\Primos\obj\Debug\Primos.exe
+C:\Users\litio\OneDrive\Escritorio\LLLIT\Code-W11\C#\AIEP_FOLDER\SolEvaUnidad2\Primos\obj\Debug\Primos.pdb
