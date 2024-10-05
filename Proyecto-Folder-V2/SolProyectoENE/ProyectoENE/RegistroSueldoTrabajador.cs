@@ -33,24 +33,26 @@ namespace ProyectoENE
         public RegistroSueldoTrabajador(Empleado empleado, Usuario usuario)
         {
             InitializeComponent();
+
             this.empleado = empleado;
             this.usuario = usuario; // Inicializamos el usuario
 
-            // Validamos el rol del usuario al inicializar el formulario
-            //ValidarAccesoUsuario();
-        }
-
-        
-        private void RegistroSueldoTrabajador_Load(object sender, EventArgs e)
-        {
-            conexion = new Conexion();
-            calculoSueldoNegocio = new CalculoSueldoNegocio();
-
-            //bool valor = negocio.ValidarRolUsuario(usuario.IdEmpleado,usuario.IdRol.ToString());
-            //MessageBox.Show(usuario.IdRol.ToString());
-
-            if(usuario.IdRol != 1)
+            if (usuario.IdRol == 1 || usuario == null)
             {
+                //Es admin
+                tbox_rutEmpleado.Enabled = true;
+                tbox_direccion.Enabled = true;
+                tbox_telefono.Enabled = true;
+                btn_guardar.Enabled = true;
+                btn_listar.Enabled = true;
+                btn_limpiarCampos.Enabled = true;
+                cmb_afp.Enabled = true;
+                cmb_salud.Enabled = true;
+
+            }
+            else
+            {
+                
                 // Es usuario normal
                 tbox_rutEmpleado.Enabled = false;
                 tbox_nombre.Enabled = false;
@@ -61,13 +63,18 @@ namespace ProyectoENE
                 btn_limpiarCampos.Enabled = false;
                 cmb_afp.Enabled = false;
                 cmb_salud.Enabled = false;
-                
-
-            } else
-            {
-                //Es admin
-                
             }
+
+        }
+
+        
+        private void RegistroSueldoTrabajador_Load(object sender, EventArgs e)
+        {
+
+            
+            conexion = new Conexion();
+            calculoSueldoNegocio = new CalculoSueldoNegocio();
+
 
             CargarDatosComboBoxes();
             CargarDatosEmpleado(); // Cargamos los datos del empleado al formulario
@@ -205,24 +212,33 @@ namespace ProyectoENE
         {
             try
             {
-                using (SqlConnection conn = conexion.ObtenerConexion())
+                // Crear instancia de Empleado con los datos del formulario
+                Empleado empleado = new Empleado
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Empleado (Rut, Nombre, Direccion, Telefono, IdAFP, IdSalud) VALUES (@Rut, @Nombre, @Direccion, @Telefono, @IdAFP, @IdSalud)", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Rut", tbox_rutEmpleado.Text);
-                        cmd.Parameters.AddWithValue("@Nombre", tbox_nombre.Text);
-                        cmd.Parameters.AddWithValue("@Direccion", tbox_direccion.Text);
-                        cmd.Parameters.AddWithValue("@Telefono", tbox_telefono.Text);
-                        cmd.Parameters.AddWithValue("@IdAFP", (cmb_afp.SelectedItem as ComboBoxItem).Value);
-                        cmd.Parameters.AddWithValue("@IdSalud", (cmb_salud.SelectedItem as ComboBoxItem).Value);
+                    Rut = tbox_rutEmpleado.Text,
+                    Nombre = tbox_nombre.Text,
+                    Direccion = tbox_direccion.Text,
+                    Telefono = tbox_telefono.Text,
+                    IdAFP = (cmb_afp.SelectedItem as ComboBoxItem).Value,
+                    IdSalud = (cmb_salud.SelectedItem as ComboBoxItem).Value,
+                    ValorHora = 5000, // Ajustar según necesidad, si es necesario un valor fijo
+                    ValorHoraExtra = 7000 // Ajustar según necesidad, si es necesario un valor fijo
+                };
 
-                        cmd.ExecuteNonQuery();
-                    }
-                    conn.Close();
+                int horasTrabajadas = int.Parse(tbox_horasTrabajadas.Text); // Obtener horas trabajadas del formulario
+                int horasExtras = int.Parse(tbox_horasExtras.Text); // Obtener horas extras del formulario
+
+
+                //ENVIAR DATOS A LA TABLA CALCULO SUELDO
+
+                // Guardar el empleado a través de EmpleadoNegocio
+                if (oEmpleadoNegocio.guardarEmpleado(empleado, horasTrabajadas,horasExtras))
+                {
+                    MessageBox.Show("Empleado guardado exitosamente.");
+                    btn_limpiarCampos.PerformClick(); // Limpiar campos después de guardar
                 }
 
-                MessageBox.Show("Empleado guardado exitosamente.");
+                //MessageBox.Show("Empleado guardado exitosamente.");
                 btn_limpiarCampos.PerformClick(); // Limpiar campos después de guardar
             }
             catch (Exception ex)

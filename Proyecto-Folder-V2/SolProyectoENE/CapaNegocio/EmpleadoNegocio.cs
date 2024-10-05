@@ -35,6 +35,7 @@ namespace CapaNegocio
                     cmd.Parameters.AddWithValue("@IdSalud", empleado.IdSalud);
 
                     cmd.ExecuteNonQuery();
+                    con.Close();
                 }
                 return true;
             }
@@ -73,7 +74,9 @@ namespace CapaNegocio
                         };
                         listaEmpleados.Add(empleado);
                     }
+                    con.Close();
                 }
+                
             }
             catch (Exception ex)
             {
@@ -82,10 +85,48 @@ namespace CapaNegocio
             return listaEmpleados;
         }
 
-        
+
+        public bool guardarEmpleado(Empleado empleado, int horasTrabajadas, int horasExtras)
+        {
+            if (empleado == null)
+            {
+                throw new ArgumentNullException(nameof(empleado), "El empleado no puede ser nulo.");
+            }
 
 
+            try
+            {
+                using (SqlConnection con = conexion.ObtenerConexion())
+                {
+                    con.Open();
+                    using (SqlCommand cmd = new SqlCommand("sp_GuardarEmpleadoYCalculoSueldo", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
+                        // Parámetros del empleado
+                        cmd.Parameters.AddWithValue("@Rut", empleado.Rut);
+                        cmd.Parameters.AddWithValue("@Nombre", empleado.Nombre);
+                        cmd.Parameters.AddWithValue("@Direccion", empleado.Direccion);
+                        cmd.Parameters.AddWithValue("@Telefono", empleado.Telefono);
+                        cmd.Parameters.AddWithValue("@ValorHora", empleado.ValorHora);
+                        cmd.Parameters.AddWithValue("@ValorHoraExtra", empleado.ValorHoraExtra);
+                        cmd.Parameters.AddWithValue("@IdAFP", empleado.IdAFP);
+                        cmd.Parameters.AddWithValue("@IdSalud", empleado.IdSalud);
+
+                        // Parámetros para cálculo de sueldo
+                        cmd.Parameters.AddWithValue("@HorasTrabajadas", horasTrabajadas);
+                        cmd.Parameters.AddWithValue("@HorasExtras", horasExtras);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al guardar empleado: " + ex.Message);
+            }
+        }
 
 
 

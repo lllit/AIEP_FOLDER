@@ -10,12 +10,17 @@ namespace CapaDatos
 {
     public class TrabajadorDatos
     {
+        
+        
         private string connectionString = "Data Source=.;Initial Catalog=BD_ene;Integrated Security=True"; // Asegúrate de usar la cadena de conexión correcta.
+        // Instancia de la clase Conexion de la CapaDatos
+        private Conexion conexion = new Conexion();
 
         // Método para insertar un trabajador en la base de datos
         public void InsertarTrabajador(Empleado trabajador)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            
+            using (SqlConnection connection =conexion.ObtenerConexion())
             {
                 string query = "INSERT INTO Empleado (Rut, Nombre, Direccion, Telefono, HorasTrabajadas, HorasExtras, AFP, Salud, SueldoBruto, SueldoLiquido) " +
                                "VALUES (@Rut, @Nombre, @Direccion, @Telefono, @HorasTrabajadas, @HorasExtras, @AFP, @Salud, @SueldoBruto, @SueldoLiquido)";
@@ -40,7 +45,7 @@ namespace CapaDatos
         // Método para obtener la lista de AFP
         public DataTable ObtenerListaAfp()
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = conexion.ObtenerConexion())
             {
                 string query = "SELECT Nombre FROM AFP";
                 SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
@@ -53,7 +58,7 @@ namespace CapaDatos
         // Método para obtener la lista de Salud
         public DataTable ObtenerListaSalud()
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = conexion.ObtenerConexion())
             {
                 string query = "SELECT Nombre FROM Salud";
                 SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
@@ -82,7 +87,7 @@ namespace CapaDatos
         // Método para obtener todos los trabajadores registrados en la base de datos
         public DataTable ObtenerTodosLosTrabajadores()
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = conexion.ObtenerConexion())
             {
                 string query = "SELECT * FROM Empleado";
                 SqlDataAdapter adapter = new SqlDataAdapter(query, connection);

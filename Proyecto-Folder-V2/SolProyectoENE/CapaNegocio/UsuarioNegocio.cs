@@ -12,7 +12,7 @@ namespace CapaNegocio
     public class UsuarioNegocio
     {
         private Conexion conexion = new Conexion();
-        //TEST 1
+        
         // Método para validar usuario
         public Usuario ValidarUsuario(string nombreUsuario, string contraseña)
         {
@@ -169,7 +169,40 @@ namespace CapaNegocio
 
             return esValido;
         }
-    
-        
+
+
+        //Método para obtener todos los empleados
+        public List<Empleado> ObtenerTodosLosEmpleados()
+        {
+            var empleados = new List<Empleado>();
+            using (SqlConnection conn = new Conexion().ObtenerConexion())
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Empleado", conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            empleados.Add(new Empleado
+                            {
+                                IdEmpleado = (int)reader["IdEmpleado"],
+                                Rut = reader["Rut"].ToString(),
+                                Nombre = reader["Nombre"].ToString(),
+                                Direccion = reader["Direccion"].ToString(),
+                                Telefono = reader["Telefono"].ToString(),
+                                ValorHora = (decimal)reader["ValorHora"],
+                                ValorHoraExtra = (decimal)reader["ValorHoraExtra"],
+                                IdAFP = (int)reader["IdAFP"],
+                                IdSalud = (int)reader["IdSalud"]
+                            });
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            return empleados;
+        }
+
     }
 }

@@ -10,7 +10,7 @@ namespace CapaDatos
     public class Conexion
     {
         // Cadena de conexión a la base de datos
-        private string connectionString = "Server=localhost\\SQLEXPRESS;Database=BD_ene;Trusted_Connection=True;MultipleActiveResultSets=True;";
+        private string connectionString = "Server=localhost\\SQLEXPRESS;Database=BD_ene2;Trusted_Connection=True;MultipleActiveResultSets=True;";
 
         // Método para obtener la conexión a la base de datos
         public SqlConnection ObtenerConexion()

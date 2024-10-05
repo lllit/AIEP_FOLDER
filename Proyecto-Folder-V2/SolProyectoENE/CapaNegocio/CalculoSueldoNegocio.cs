@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace CapaNegocio
 {
     public class CalculoSueldoNegocio
     {
+        Conexion conexion = new Conexion();
+
         // Método para calcular el sueldo de un empleado
         public decimal CalcularSueldo(Empleado empleado, int horasTrabajadas, int horasExtras)
         {
@@ -49,6 +52,35 @@ namespace CapaNegocio
                 case 4: return 0.15m; // BANMEDICA
                 default: return 0.0m;
             }
+        }
+
+
+        public decimal? ObtenerSueldoLiquidoPorIdEmpleado(int idEmpleado)
+        {
+            decimal? sueldoLiquido = null;
+
+            using (SqlConnection conn = conexion.ObtenerConexion())
+            {
+                string query = "SELECT SueldoLiquido FROM CalculoSueldo WHERE IdEmpleado = @IdEmpleado";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@IdEmpleado", idEmpleado);
+
+                try
+                {
+                    conn.Open();
+                    var result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        sueldoLiquido = Convert.ToDecimal(result);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error al obtener el sueldo líquido: " + ex.Message);
+                }
+            }
+
+            return sueldoLiquido;
         }
     }
 }
