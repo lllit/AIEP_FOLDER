@@ -22,7 +22,6 @@ namespace ProyectoENE
 
         private Conexion conexion;
         private CalculoSueldoNegocio calculoSueldoNegocio;
-        private CN_Recursos recursosNegocio;
         private Empleado empleado;
         private Usuario usuario; // Añadimos la instancia de Usuario
         // Crear una instancia de UsuarioNegocio
@@ -63,6 +62,7 @@ namespace ProyectoENE
                 btn_limpiarCampos.Enabled = false;
                 cmb_afp.Enabled = false;
                 cmb_salud.Enabled = false;
+                
             }
 
         }
@@ -80,28 +80,7 @@ namespace ProyectoENE
             CargarDatosEmpleado(); // Cargamos los datos del empleado al formulario
         }
 
-        // Método para validar el acceso del usuario
-        private void ValidarAccesoUsuario()
-        {
-            if (negocio.EsAdmin(usuario))
-            {
-                // Si el usuario es administrador, permitimos acceso completo
-                MessageBox.Show("Acceso de administrador.");
-            }
-            else if (negocio.EsUsuarioNormal(usuario))
-            {
-                // Si es un usuario normal, restringimos ciertas funciones
-                MessageBox.Show("Acceso de usuario normal. Algunas funciones están restringidas.");
-                btn_guardar.Enabled = false; // Por ejemplo, deshabilitamos la opción de guardar
-            }
-            else
-            {
-                // Si no es ni admin ni usuario normal, denegamos acceso
-                MessageBox.Show("Acceso denegado. Usuario sin permisos.");
-                this.Close(); // Cerramos el formulario
-            }
-        }
-
+        
 
 
         // Método para cargar los ComboBox con datos de la base de datos
@@ -221,8 +200,8 @@ namespace ProyectoENE
                     Telefono = tbox_telefono.Text,
                     IdAFP = (cmb_afp.SelectedItem as ComboBoxItem).Value,
                     IdSalud = (cmb_salud.SelectedItem as ComboBoxItem).Value,
-                    ValorHora = 5000, // Ajustar según necesidad, si es necesario un valor fijo
-                    ValorHoraExtra = 7000 // Ajustar según necesidad, si es necesario un valor fijo
+                    ValorHora = 5000, 
+                    ValorHoraExtra = 7000
                 };
 
                 int horasTrabajadas = int.Parse(tbox_horasTrabajadas.Text); // Obtener horas trabajadas del formulario

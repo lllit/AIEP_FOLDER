@@ -42,10 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalculoSueldoNegocio.cs" />
-    <Compile Include="CN_Recursos.cs" />
     <Compile Include="EmpleadoNegocio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TrabajadorNegocio.cs" />
     <Compile Include="UsuarioNegocio.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -38,11 +38,13 @@ namespace ProyectoENE
                 if (usuarioValidado != null)
                 {
                     usuario = usuarioValidado;
+                    
                     // Verificamos si el usuario es administrador
                     if (usuarioValidado.IdRol == 1) // 1 = Administrador
                     {
-                        MessageBox.Show("Bienvenido Administrador");
                         Empleado empleado = usuarioNegocio.ObtenerEmpleadoPorId(usuarioValidado.IdEmpleado);
+                        MessageBox.Show($"Bienvenido {empleado.Nombre}");
+                        
                         // Redirigimos al formulario RegistroSueldoTrabajador
                         RegistroSueldoTrabajador registroForm = new RegistroSueldoTrabajador(empleado,usuario);
                         registroForm.Show();
@@ -55,7 +57,7 @@ namespace ProyectoENE
 
                         if (empleado != null)
                         {
-                            MessageBox.Show("Bienvenido Usuario Normal");
+                            MessageBox.Show($"Bienvenido {empleado.Nombre}");
 
                             // Redirigimos al formulario RegistroSueldoTrabajador con datos de empleado
                             RegistroSueldoTrabajador registroForm = new RegistroSueldoTrabajador(empleado, usuario);

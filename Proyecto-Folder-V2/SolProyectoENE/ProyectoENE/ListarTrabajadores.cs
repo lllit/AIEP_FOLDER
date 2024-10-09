@@ -17,10 +17,6 @@ namespace ProyectoENE
     {
         private UsuarioNegocio _usuarioNegocio;
         EmpleadoNegocio oEmpleadoNegocio = new EmpleadoNegocio();
-        private Empleado empleado;
-        TrabajadorNegocio oTrabajador = new TrabajadorNegocio();
-        private Usuario usuario; // Añadimos la instancia de Usuario
-        //private UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
         private CalculoSueldoNegocio calculoSueldoNegocio = new CalculoSueldoNegocio();
 
 
@@ -38,15 +34,7 @@ namespace ProyectoENE
             CargarTodosLosTrabajadoresEnDataGridView();
         }
 
-        //Cargar en el ComboBox
-        private void CargarEmpleados()
-        {
-            var empleados = _usuarioNegocio.ObtenerTodosLosEmpleados();
-            cmb_trabajador.DataSource = empleados;
-            cmb_trabajador.DisplayMember = "Nombre";
-            cmb_trabajador.ValueMember = "IdEmpleado";
-        }
-
+        
         private void cmb_trabajador_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmb_trabajador.SelectedItem.ToString() == "TODOS")
@@ -65,70 +53,44 @@ namespace ProyectoENE
         private void FiltrarTrabajadorEnDataGridView(string nombreTrabajador)
         {
 
+            try
+            {
+                // Obtener todos los empleados
+                List<Empleado> empleados = _usuarioNegocio.ObtenerTodosLosEmpleados();
 
-            // Obtener todos los empleados
-            List<Empleado> empleados = _usuarioNegocio.ObtenerTodosLosEmpleados();
+                List<Empleado> oLista = oEmpleadoNegocio.ListarEmpleados();
 
-            List<Empleado> oLista = oEmpleadoNegocio.ListarEmpleados();
+                // Filtrar por el nombre del trabajador seleccionado
+                Empleado empleadoFiltrado = empleados.FirstOrDefault(e => e.Nombre == nombreTrabajador);
 
-            // Filtrar por el nombre del trabajador seleccionado
-            Empleado empleadoFiltrado = empleados.FirstOrDefault(e => e.Nombre == nombreTrabajador);
+                int idEmpleado = empleadoFiltrado.IdEmpleado;
 
-            int idEmpleado = empleadoFiltrado.IdEmpleado;
-
-            //MessageBox.Show($"Valor hora es: {empleadoFiltrado.ValorHora.ToString()}");
-
-
-            // Limpiar DataGridView antes de agregar datos
-            dgv_trabajador.Rows.Clear();
+                //MessageBox.Show($"Valor hora es: {empleadoFiltrado.ValorHora.ToString()}");
 
 
+                // Limpiar DataGridView antes de agregar datos
+                dgv_trabajador.Rows.Clear();
+
+
+
+                if (empleadoFiltrado != null)
+                {
+                    // Calcular sueldo líquido
+
+                    decimal? sueldoLiquido = calculoSueldoNegocio.ObtenerSueldoLiquidoPorIdEmpleado(idEmpleado);
+                    // Añadir la fila al DataGridView
+                    dgv_trabajador.Rows.Add(empleadoFiltrado.Rut, empleadoFiltrado.Nombre, empleadoFiltrado.Direccion, sueldoLiquido);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Error al filtrar trabajador: " + ex.Message);
+            }
             
-            if (empleadoFiltrado != null)
-            {
-                // Calcular sueldo líquido
-                //decimal sueldoLiquido = sueldoBruto - descuentoAFP - descuentoSalud;
-                decimal? sueldoLiquido = calculoSueldoNegocio.ObtenerSueldoLiquidoPorIdEmpleado(idEmpleado);
-                // Añadir la fila al DataGridView
-                dgv_trabajador.Rows.Add(empleadoFiltrado.Rut, empleadoFiltrado.Nombre, empleadoFiltrado.Direccion, sueldoLiquido);
-            }
         }
 
-
-        
-
-
-
-
-        private decimal ObtenerTasaAFP(int idAFP)
-        {
-            // Este método debería obtener la tasa de descuento desde la base de datos
-            // Por ahora, se puede simular con valores fijos o realizar una consulta
-            switch (idAFP)
-            {
-                case 1: return 7.00m;
-                case 2: return 9.00m;
-                case 3: return 12.00m;
-                case 4: return 13.00m;
-                default: return 0.00m;
-            }
-        }
-
-        private decimal ObtenerTasaSalud(int idSalud)
-        {
-            // Este método debería obtener la tasa de descuento desde la base de datos
-            // Por ahora, se puede simular con valores fijos o realizar una consulta
-            switch (idSalud)
-            {
-                case 1: return 12.00m;
-                case 2: return 13.00m;
-                case 3: return 14.00m;
-                case 4: return 15.00m;
-                default: return 0.00m;
-            }
-        }
-
-        
 
         private void CargarTrabajadoresEnComboBox()
         {
@@ -182,71 +144,12 @@ namespace ProyectoENE
 
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
         private void btn_volver_Click(object sender, EventArgs e)
         {
 
             this.Hide();
         }
 
-
-
-
-
-
-
-
-
-
-
-        private void MostrarDatosEnDataGridView(int idEmpleado)
-        {
-            List<Empleado> oLista = oEmpleadoNegocio.ListarEmpleados();
-
-            Empleado oEmpleado = oLista.FirstOrDefault(emp => emp.IdEmpleado == idEmpleado);
-
-            decimal valorHora = oEmpleado.ValorHora;
-            decimal valorHoraExtra = oEmpleado.ValorHoraExtra;
-
-            var empleado = _usuarioNegocio.ObtenerEmpleadoPorId(idEmpleado);
-
-
-            //oTrabajador.ObtenerAfp();
-
-            if (empleado != null)
-            {
-                // Obtener el sueldo líquido desde la base de datos
-                decimal? sueldoLiquido = calculoSueldoNegocio.ObtenerSueldoLiquidoPorIdEmpleado(idEmpleado);
-
-                if (sueldoLiquido.HasValue)
-                {
-                    dgv_trabajador.Rows.Clear();
-                    dgv_trabajador.Rows.Add(oEmpleado.Rut, oEmpleado.Nombre, oEmpleado.Direccion, sueldoLiquido.Value);
-                }
-                else
-                {
-                    MessageBox.Show("No se encontró el sueldo líquido para el empleado especificado.");
-                }
-
-
-                // Aquí debes calcular el sueldo líquido a partir del sueldo bruto y descuentos
-                //decimal sueldoBruto = (empleado.ValorHora * 160) + (empleado.ValorHoraExtra * 20); // Ejemplo con horas rabajadasfijas
-                //decimal descuentoAFP = sueldoBruto * ObtenerTasaAFP(empleado.IdAFP) / 100;
-                //decimal descuentoSalud = sueldoBruto * ObtenerTasaSalud(empleado.IdSalud) / 100;
-                //decimal sueldoLiquido = sueldoBruto - descuentoAFP - descuentoSalud;
-
-                //dgv_trabajador.Rows.Clear();
-                //dgv_trabajador.Rows.Add(empleado.Rut, empleado.Nombre, empleado.Direccion, sueldoLiquido);
-            }
-        }
 
 
     }
