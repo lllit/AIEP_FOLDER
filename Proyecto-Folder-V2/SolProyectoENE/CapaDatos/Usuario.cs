@@ -14,8 +14,5 @@ namespace CapaDatos
         public int IdRol { get; set; }
         public int IdEmpleado { get; set; }
 
-        // Relación con RolUsuario y Empleado
-        public RolUsuario Rol { get; set; }
-        public Empleado Empleado { get; set; }
     }
 }

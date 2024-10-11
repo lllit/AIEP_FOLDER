@@ -18,8 +18,5 @@ namespace CapaDatos
         public int IdAFP { get; set; }
         public int IdSalud { get; set; }
 
-        // Relación con AFP y Salud
-        public AFP AFP { get; set; }
-        public Salud Salud { get; set; }
     }
 }

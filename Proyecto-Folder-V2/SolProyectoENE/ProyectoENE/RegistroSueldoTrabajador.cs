@@ -33,25 +33,16 @@ namespace ProyectoENE
         {
             InitializeComponent();
 
+            conexion = new Conexion();
+
             this.empleado = empleado;
             this.usuario = usuario; // Inicializamos el usuario
 
-            if (usuario.IdRol == 1 || usuario == null)
-            {
-                //Es admin
-                tbox_rutEmpleado.Enabled = true;
-                tbox_direccion.Enabled = true;
-                tbox_telefono.Enabled = true;
-                btn_guardar.Enabled = true;
-                btn_listar.Enabled = true;
-                btn_limpiarCampos.Enabled = true;
-                cmb_afp.Enabled = true;
-                cmb_salud.Enabled = true;
+            CargarDatosComboBoxes();
+            CargarDatosEmpleado();
 
-            }
-            else
+            if (usuario.IdRol != 1)
             {
-                
                 // Es usuario normal
                 tbox_rutEmpleado.Enabled = false;
                 tbox_nombre.Enabled = false;
@@ -62,8 +53,39 @@ namespace ProyectoENE
                 btn_limpiarCampos.Enabled = false;
                 cmb_afp.Enabled = false;
                 cmb_salud.Enabled = false;
-                
+
+                CargarDatosEmpleado();
+
+            } else
+            {
+                tbox_rutEmpleado.Text = string.Empty;
+                tbox_nombre.Text = string.Empty;
+                tbox_direccion.Text = string.Empty;
+                tbox_telefono.Text = string.Empty;
+                tbox_rutEmpleado.Text = string.Empty;
+                cmb_afp.SelectedIndex = 0;
+                cmb_salud.SelectedIndex = 0;
             }
+            
+            CargarDatosEmpleado();
+            
+            
+            //} else
+            //{
+            //    //admin
+            //    tbox_rutEmpleado.Enabled = true;
+            //    tbox_nombre.Enabled = true;
+            //    tbox_direccion.Enabled = true;
+            //    tbox_telefono.Enabled = true;
+            //    btn_guardar.Enabled = true;
+            //    btn_listar.Enabled = true;
+            //    btn_limpiarCampos.Enabled = true;
+            //    cmb_afp.Enabled = true;
+            //    cmb_salud.Enabled = true;
+            //}
+
+            
+
 
         }
 
@@ -72,12 +94,11 @@ namespace ProyectoENE
         {
 
             
-            conexion = new Conexion();
+            //conexion = new Conexion();
             calculoSueldoNegocio = new CalculoSueldoNegocio();
 
-
-            CargarDatosComboBoxes();
-            CargarDatosEmpleado(); // Cargamos los datos del empleado al formulario
+           
+            // Cargamos los datos del empleado al formulario
         }
 
         
@@ -161,24 +182,34 @@ namespace ProyectoENE
                 int horasExtras = int.Parse(tbox_horasExtras.Text);
                 int idAFP = (cmb_afp.SelectedItem as dynamic).Value;
                 int idSalud = (cmb_salud.SelectedItem as dynamic).Value;
+
                 Empleado oEmpleado = oLista.FirstOrDefault(emp => emp.IdEmpleado == empleado.IdEmpleado);
 
 
                 decimal valorHora = oEmpleado.ValorHora;
                 decimal valorHoraExtra = oEmpleado.ValorHoraExtra;
 
+                decimal sueldoBruto = (valorHora * horasTrabajadas) + (valorHoraExtra * horasExtras);
+
+
+                decimal tasaDescuentoAFP = calculoSueldoNegocio.ObtenerDescuentoAFP(idAFP);
+                decimal descuentoAFP = sueldoBruto * tasaDescuentoAFP;
+
+
+                decimal tasaDescuentoSalud = calculoSueldoNegocio.ObtenerDescuentoSalud(idSalud);
+                decimal descuentoSalud = sueldoBruto * tasaDescuentoSalud;
+
+                // Calcular el sueldo líquido: sueldo bruto menos descuentos
+                decimal sueldoLiquido = sueldoBruto - descuentoAFP - descuentoSalud;
+
 
                 
-
-                // Calcular el sueldo líquido
-                decimal sueldoLiquido = calculoSueldoNegocio.CalcularSueldo(oEmpleado, horasTrabajadas, horasExtras);
-                decimal sueldoBruto = (valorHora * horasTrabajadas) + (valorHoraExtra * horasExtras);
 
 
 
                 // Mostrar resultados en los TextBox correspondientes
-                tbox_sueldoBruto.Text = sueldoBruto.ToString();
-                tbox_sueldoLiquido.Text = sueldoLiquido.ToString();
+                tbox_sueldoBruto.Text = sueldoBruto.ToString("N2");
+                tbox_sueldoLiquido.Text = sueldoLiquido.ToString("N2");
             }
             catch (Exception ex)
             {
@@ -214,11 +245,11 @@ namespace ProyectoENE
                 if (oEmpleadoNegocio.guardarEmpleado(empleado, horasTrabajadas,horasExtras))
                 {
                     MessageBox.Show("Empleado guardado exitosamente.");
-                    btn_limpiarCampos.PerformClick(); // Limpiar campos después de guardar
+                    //btn_limpiarCampos.PerformClick(); // Limpiar campos después de guardar
                 }
 
                 //MessageBox.Show("Empleado guardado exitosamente.");
-                btn_limpiarCampos.PerformClick(); // Limpiar campos después de guardar
+                //btn_limpiarCampos.PerformClick(); // Limpiar campos después de guardar
             }
             catch (Exception ex)
             {
@@ -236,8 +267,8 @@ namespace ProyectoENE
             tbox_horasExtras.Clear();
             tbox_sueldoBruto.Clear();
             tbox_sueldoLiquido.Clear();
-            cmb_afp.SelectedIndex = -1; // Seleccionar "Seleccionar"
-            cmb_salud.SelectedIndex = -1; // Seleccionar "Seleccionar"
+            cmb_afp.SelectedIndex = 0;
+            cmb_salud.SelectedIndex = 0;
         }
 
         private void btn_listar_Click(object sender, EventArgs e)

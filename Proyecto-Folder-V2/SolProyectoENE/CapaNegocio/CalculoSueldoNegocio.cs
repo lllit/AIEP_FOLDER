@@ -29,35 +29,61 @@ namespace CapaNegocio
         }
 
         // Método para obtener el porcentaje de descuento de AFP
-        private decimal ObtenerDescuentoAFP(int idAFP)
+        public decimal ObtenerDescuentoAFP(int idAFP)
         {
-            switch (idAFP)
+            decimal tasaDescuento = 0.0m;
+            using (SqlConnection connection = conexion.ObtenerConexion())
             {
-                case 1: return 0.07m; // CUPRUM
-                case 2: return 0.09m; // MODELO
-                case 3: return 0.12m; // CAPITAL
-                case 4: return 0.13m; // PROVIDA
-                default: return 0.0m;
+                string query = "SELECT TasaDescuento FROM AFP WHERE IdAFP = @IdAFP";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@IdAFP", idAFP);
+                    connection.Open();
+
+                    object result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        tasaDescuento = Convert.ToDecimal(result) / 100; // Dividir por 100 para convertirlo a porcentaje
+                    }
+                }
+                
             }
+            return tasaDescuento;
+
         }
 
         // Método para obtener el porcentaje de descuento de Salud
-        private decimal ObtenerDescuentoSalud(int idSalud)
+        public decimal ObtenerDescuentoSalud(int idSalud)
         {
-            switch (idSalud)
+            decimal tasaDescuento = 0.0m;
+
+            using (SqlConnection connection = conexion.ObtenerConexion())
             {
-                case 1: return 0.12m; // FONASA
-                case 2: return 0.13m; // CONSALUD
-                case 3: return 0.14m; // MASVIDA
-                case 4: return 0.15m; // BANMEDICA
-                default: return 0.0m;
+                string query = "SELECT TasaDescuento FROM Salud WHERE IdSalud = @IdSalud";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@IdSalud", idSalud);
+                    connection.Open();
+
+                    object result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        tasaDescuento = Convert.ToDecimal(result) / 100; // Dividir por 100 para convertirlo a porcentaje
+                    }
+                }
             }
+
+            return tasaDescuento;
         }
 
 
-        public decimal? ObtenerSueldoLiquidoPorIdEmpleado(int idEmpleado)
+
+
+        public decimal ObtenerSueldoLiquidoPorIdEmpleado(int idEmpleado)
         {
-            decimal? sueldoLiquido = null;
+            decimal sueldoLiquido= 0;
 
             using (SqlConnection conn = conexion.ObtenerConexion())
             {

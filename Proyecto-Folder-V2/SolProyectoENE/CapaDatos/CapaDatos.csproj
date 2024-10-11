@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AFP.cs" />
-    <Compile Include="CalculoSueldo.cs" />
     <Compile Include="ComboBoxItem.cs" />
     <Compile Include="Conexion.cs" />
     <Compile Include="Empleado.cs" />

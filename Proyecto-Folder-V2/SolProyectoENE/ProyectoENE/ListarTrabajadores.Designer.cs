@@ -31,13 +31,15 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cmb_trabajador = new System.Windows.Forms.ComboBox();
             this.dgv_trabajador = new System.Windows.Forms.DataGridView();
-            this.Rut = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Nombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Direccion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SueldoLiquido = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btn_modificar = new System.Windows.Forms.Button();
             this.btn_eliminar = new System.Windows.Forms.Button();
             this.btn_volver = new System.Windows.Forms.Button();
+            this.IdEmpleado = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Rut = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Nombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Direccion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Telefono = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SueldoLiquido = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_trabajador)).BeginInit();
             this.SuspendLayout();
             // 
@@ -66,52 +68,32 @@
             this.dgv_trabajador.AllowUserToDeleteRows = false;
             this.dgv_trabajador.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_trabajador.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.IdEmpleado,
             this.Rut,
             this.Nombre,
             this.Direccion,
+            this.Telefono,
             this.SueldoLiquido});
+            this.dgv_trabajador.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dgv_trabajador.Location = new System.Drawing.Point(12, 115);
             this.dgv_trabajador.Name = "dgv_trabajador";
-            this.dgv_trabajador.ReadOnly = true;
             this.dgv_trabajador.Size = new System.Drawing.Size(681, 223);
             this.dgv_trabajador.TabIndex = 2;
-            // 
-            // Rut
-            // 
-            this.Rut.HeaderText = "Rut";
-            this.Rut.Name = "Rut";
-            this.Rut.ReadOnly = true;
-            // 
-            // Nombre
-            // 
-            this.Nombre.HeaderText = "Nombre";
-            this.Nombre.Name = "Nombre";
-            this.Nombre.ReadOnly = true;
-            // 
-            // Direccion
-            // 
-            this.Direccion.HeaderText = "Direccion";
-            this.Direccion.Name = "Direccion";
-            this.Direccion.ReadOnly = true;
-            // 
-            // SueldoLiquido
-            // 
-            this.SueldoLiquido.HeaderText = "Sueldo Liquido";
-            this.SueldoLiquido.Name = "SueldoLiquido";
-            this.SueldoLiquido.ReadOnly = true;
+            this.dgv_trabajador.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_trabajador_CellContentClick);
             // 
             // btn_modificar
             // 
-            this.btn_modificar.Location = new System.Drawing.Point(145, 372);
+            this.btn_modificar.Location = new System.Drawing.Point(541, 372);
             this.btn_modificar.Name = "btn_modificar";
             this.btn_modificar.Size = new System.Drawing.Size(135, 50);
             this.btn_modificar.TabIndex = 3;
             this.btn_modificar.Text = "Modificar";
             this.btn_modificar.UseVisualStyleBackColor = true;
+            this.btn_modificar.Click += new System.EventHandler(this.btn_modificar_Click);
             // 
             // btn_eliminar
             // 
-            this.btn_eliminar.Location = new System.Drawing.Point(320, 372);
+            this.btn_eliminar.Location = new System.Drawing.Point(191, 372);
             this.btn_eliminar.Name = "btn_eliminar";
             this.btn_eliminar.Size = new System.Drawing.Size(135, 50);
             this.btn_eliminar.TabIndex = 4;
@@ -121,13 +103,50 @@
             // btn_volver
             // 
             this.btn_volver.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.btn_volver.Location = new System.Drawing.Point(498, 372);
+            this.btn_volver.Location = new System.Drawing.Point(12, 372);
             this.btn_volver.Name = "btn_volver";
             this.btn_volver.Size = new System.Drawing.Size(135, 50);
             this.btn_volver.TabIndex = 5;
             this.btn_volver.Text = "Cerrar";
             this.btn_volver.UseVisualStyleBackColor = false;
             this.btn_volver.Click += new System.EventHandler(this.btn_volver_Click);
+            // 
+            // IdEmpleado
+            // 
+            this.IdEmpleado.HeaderText = "ID";
+            this.IdEmpleado.Name = "IdEmpleado";
+            this.IdEmpleado.ReadOnly = true;
+            this.IdEmpleado.Visible = false;
+            // 
+            // Rut
+            // 
+            this.Rut.HeaderText = "Rut";
+            this.Rut.MaxInputLength = 12;
+            this.Rut.Name = "Rut";
+            // 
+            // Nombre
+            // 
+            this.Nombre.HeaderText = "Nombre";
+            this.Nombre.MaxInputLength = 100;
+            this.Nombre.Name = "Nombre";
+            // 
+            // Direccion
+            // 
+            this.Direccion.HeaderText = "Direccion";
+            this.Direccion.MaxInputLength = 200;
+            this.Direccion.Name = "Direccion";
+            // 
+            // Telefono
+            // 
+            this.Telefono.HeaderText = "Telefono";
+            this.Telefono.Name = "Telefono";
+            // 
+            // SueldoLiquido
+            // 
+            this.SueldoLiquido.HeaderText = "Sueldo Liquido";
+            this.SueldoLiquido.MaxInputLength = 18;
+            this.SueldoLiquido.Name = "SueldoLiquido";
+            this.SueldoLiquido.ReadOnly = true;
             // 
             // ListarTrabajadores
             // 
@@ -157,10 +176,12 @@
         private System.Windows.Forms.DataGridView dgv_trabajador;
         private System.Windows.Forms.Button btn_modificar;
         private System.Windows.Forms.Button btn_eliminar;
+        private System.Windows.Forms.Button btn_volver;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IdEmpleado;
         private System.Windows.Forms.DataGridViewTextBoxColumn Rut;
         private System.Windows.Forms.DataGridViewTextBoxColumn Nombre;
         private System.Windows.Forms.DataGridViewTextBoxColumn Direccion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Telefono;
         private System.Windows.Forms.DataGridViewTextBoxColumn SueldoLiquido;
-        private System.Windows.Forms.Button btn_volver;
     }
 }

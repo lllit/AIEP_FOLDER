@@ -68,7 +68,7 @@ namespace CapaNegocio
                 using (SqlConnection con = conexion.ObtenerConexion())
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand("sp_GuardarEmpleadoYCalculoSueldo", con))
+                    using (SqlCommand cmd = new SqlCommand("sp_GuardarEmpleadoYCalculoSueldoActual", con))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
@@ -98,7 +98,35 @@ namespace CapaNegocio
         }
 
 
+        public bool ActualizarEmpleado(Empleado empleado)
+        {
+            try
+            {
+                
+                using (SqlConnection connection = conexion.ObtenerConexion())
+                {
+                    string query = "UPDATE Empleado SET Nombre = @Nombre, Direccion = @Direccion, Telefono = @Telefono WHERE IdEmpleado = @IdEmpleado";
 
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@IdEmpleado", empleado.IdEmpleado);
+                    command.Parameters.AddWithValue("@Rut", empleado.Rut);
+                    command.Parameters.AddWithValue("@Nombre", empleado.Nombre);
+                    command.Parameters.AddWithValue("@Direccion", empleado.Direccion);
+                    command.Parameters.AddWithValue("@Telefono", empleado.Telefono);
+
+                    connection.Open();
+                    int resultado = command.ExecuteNonQuery();
+
+                    return resultado > 0; // Retorna true si se actualizó al menos una fila
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("Error al actualizar empleado: " + ex.Message);
+            }
+            
+        }
 
     }
 }

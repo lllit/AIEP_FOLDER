@@ -24,7 +24,7 @@ namespace ProyectoENE
         {
             InitializeComponent();
             _usuarioNegocio = new UsuarioNegocio();
-            //CargarEmpleados();
+            
         }
 
         private void ListarTrabajadores_Load(object sender, EventArgs e)
@@ -46,7 +46,7 @@ namespace ProyectoENE
             {
                 // Filtrar por el trabajador seleccionado
                 FiltrarTrabajadorEnDataGridView(cmb_trabajador.SelectedItem.ToString());
-                //MostrarDatosEnDataGridView(empleado.IdEmpleado);
+                
             }
         }
 
@@ -65,7 +65,7 @@ namespace ProyectoENE
 
                 int idEmpleado = empleadoFiltrado.IdEmpleado;
 
-                //MessageBox.Show($"Valor hora es: {empleadoFiltrado.ValorHora.ToString()}");
+                
 
 
                 // Limpiar DataGridView antes de agregar datos
@@ -77,9 +77,9 @@ namespace ProyectoENE
                 {
                     // Calcular sueldo líquido
 
-                    decimal? sueldoLiquido = calculoSueldoNegocio.ObtenerSueldoLiquidoPorIdEmpleado(idEmpleado);
+                    decimal sueldoLiquido = calculoSueldoNegocio.ObtenerSueldoLiquidoPorIdEmpleado(idEmpleado);
                     // Añadir la fila al DataGridView
-                    dgv_trabajador.Rows.Add(empleadoFiltrado.Rut, empleadoFiltrado.Nombre, empleadoFiltrado.Direccion, sueldoLiquido);
+                    dgv_trabajador.Rows.Add(empleadoFiltrado.IdEmpleado,empleadoFiltrado.Rut, empleadoFiltrado.Nombre, empleadoFiltrado.Direccion,empleadoFiltrado.Telefono, sueldoLiquido.ToString("N2"));
                 }
 
             }
@@ -94,52 +94,83 @@ namespace ProyectoENE
 
         private void CargarTrabajadoresEnComboBox()
         {
-            // Obtener todos los empleados
-            List<Empleado> empleados = _usuarioNegocio.ObtenerTodosLosEmpleados();
-
-            // Agregar opción "TODOS" al combo box
-            cmb_trabajador.Items.Add("TODOS");
-
-            // Llenar ComboBox con los nombres de los empleados
-            foreach (var empleado in empleados)
+            try
             {
-                cmb_trabajador.Items.Add(empleado.Nombre);
-            }
+                cmb_trabajador.Items.Clear();
+                
+                // Obtener todos los empleados
+                List<Empleado> empleados = _usuarioNegocio.ObtenerTodosLosEmpleados();
 
-            // Establecer el valor por defecto como "TODOS"
-            cmb_trabajador.SelectedIndex = 0;
+                // Agregar opción "TODOS" al combo box
+                cmb_trabajador.Items.Add("TODOS");
+
+                // Llenar ComboBox con los nombres de los empleados
+                foreach (var empleado in empleados)
+                {
+                    cmb_trabajador.Items.Add(empleado.Nombre);
+                }
+
+                // Establecer el valor por defecto como "TODOS"
+                cmb_trabajador.SelectedIndex = 0;
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+            
         }
+
+       
+
         private void CargarTodosLosTrabajadoresEnDataGridView()
         {
-            // Obtener todos los empleados
-            List<Empleado> empleados = _usuarioNegocio.ObtenerTodosLosEmpleados();
-
-            // Limpiar DataGridView antes de agregar datos
-            dgv_trabajador.Rows.Clear();
-
-            
-
-            // Añadir empleados al DataGridView
-            foreach (var empleado in empleados)
+            try
             {
-                // Calcular sueldo bruto (esto es solo un ejemplo)
-                decimal sueldoBruto = (empleado.ValorHora * 160) + (empleado.ValorHoraExtra * 20); // Suponiendo 160 horas normales y 20 horas extras
+                // Obtener todos los empleados
+                List<Empleado> empleados = _usuarioNegocio.ObtenerTodosLosEmpleados();
 
-                // Ejemplo de cálculo de descuentos (estos porcentajes deben ser ajustados según la lógica de negocio)
-                decimal descuentoAFP = sueldoBruto * 0.1m; // 10% de descuento para AFP
-                decimal descuentoSalud = sueldoBruto * 0.07m; // 7% de descuento para Salud
+                // Limpiar DataGridView antes de agregar datos
+                dgv_trabajador.Rows.Clear();
 
-                int idEmpleado = empleado.IdEmpleado;
+                // Verificar si las columnas ya existen, si no, agregarlas
+                if (dgv_trabajador.Columns.Count == 0)
+                {
+                    // Agregar columnas necesarias al DataGridView
+                    dgv_trabajador.Columns.Add("IdEmpleado", "ID Empleado");
+                    dgv_trabajador.Columns.Add("Rut", "Rut");
+                    dgv_trabajador.Columns.Add("Nombre", "Nombre");
+                    dgv_trabajador.Columns.Add("Direccion", "Dirección");
+                    dgv_trabajador.Columns.Add("Telefono", "Teléfono");
+                    dgv_trabajador.Columns.Add("SueldoLiquido", "Sueldo Líquido");
 
-                // Calcular sueldo líquido
-                //decimal sueldoLiquido = sueldoBruto - descuentoAFP - descuentoSalud;
+                    // Ocultar la columna IdEmpleado
+                    dgv_trabajador.Columns["IdEmpleado"].Visible = false;
+                }
 
-                decimal? sueldoLiquido = calculoSueldoNegocio.ObtenerSueldoLiquidoPorIdEmpleado(idEmpleado);
+
+                // Añadir empleados al DataGridView
+                foreach (var empleado in empleados)
+                {
+                    
+                    int idEmpleado = empleado.IdEmpleado;
 
 
-                // Añadir la fila al DataGridView
-                dgv_trabajador.Rows.Add(empleado.Rut, empleado.Nombre, empleado.Direccion, sueldoLiquido);
+                    decimal sueldoLiquido = calculoSueldoNegocio.ObtenerSueldoLiquidoPorIdEmpleado(idEmpleado);
+
+
+                    // Añadir la fila al DataGridView
+                    dgv_trabajador.Rows.Add(idEmpleado, empleado.Rut, empleado.Nombre, empleado.Direccion,empleado.Telefono, sueldoLiquido.ToString("N2"));
+
+                }
+
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+            
         }
 
         
@@ -150,7 +181,59 @@ namespace ProyectoENE
             this.Hide();
         }
 
+        private void btn_modificar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (DataGridViewRow fila in dgv_trabajador.Rows)
+                {
+                    // Verificar que la fila no sea nueva o esté vacía
+                    if (fila.IsNewRow || fila.Cells["IdEmpleado"].Value == null)
+                        continue;
+                    
+                    // Crear un objeto Empleado con los datos modificados en el DataGridView
+                    Empleado empleadoModificado = new Empleado
+                    {
+                        IdEmpleado = Convert.ToInt32(fila.Cells["IdEmpleado"].Value), // Obtener el IdEmpleado de la celda
+                        Rut = fila.Cells["Rut"].Value.ToString(),
+                        Nombre = fila.Cells["Nombre"].Value.ToString(),
+                        Direccion = fila.Cells["Direccion"].Value.ToString(),
+                        Telefono = fila.Cells["Telefono"].Value.ToString()
+                    };
+                    
+
+                    // Llama al método de negocio para actualizar el empleado en la base de datos
+                    bool actualizado = oEmpleadoNegocio.ActualizarEmpleado(empleadoModificado);
+
+                    if (!actualizado)
+                    {
+                        // Si no se pudo actualizar, mostrar un mensaje y detener el proceso
+                        MessageBox.Show($"Error al actualizar el empleado con ID: {empleadoModificado.IdEmpleado}");
+                        return;
+                    }
+                }
+                // Si se actualizan todos los empleados, mostrar un mensaje de éxito
+                MessageBox.Show("Todos los empleados han sido actualizados correctamente.");
+                CargarTrabajadoresEnComboBox();
+                CargarTodosLosTrabajadoresEnDataGridView();
 
 
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+
+
+        }
+
+       
+        
+        
+        private void dgv_trabajador_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            
+        }
     }
 }

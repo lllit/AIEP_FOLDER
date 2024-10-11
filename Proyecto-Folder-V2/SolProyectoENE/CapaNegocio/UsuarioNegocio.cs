@@ -90,13 +90,7 @@ namespace CapaNegocio
 
 
 
-        // Método para validar si el usuario es un empleado normal
-        public bool EsUsuarioNormal(Usuario usuario)
-        {
-            // Asumimos que el IdRol para usuario normal es 2
-            return usuario.Rol != null && usuario.Rol.IdRol == 2;
-        }
-
+        
         
         //Método para obtener todos los empleados
         public List<Empleado> ObtenerTodosLosEmpleados()
